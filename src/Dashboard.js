@@ -3,7 +3,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { Circles } from "react-loader-spinner";
 import { useNavigate, Link } from "react-router-dom";
 
-//Note: thunks for fetching question and user data and reducer to clear state
+//Note: thunks for fetching question and user data
 import { handleGetUsers } from "./features/user/userSlice";
 import { handleGetQuestions } from "./features/question/questionSlice";
 
@@ -30,10 +30,12 @@ const Dashboard = () => {
 
   // Note: component state
   const [isError, setIsError] = useState(false);
+
   const [showAnswered, setShowAnswered] = useState(false);
   const [answered, setAnswered] = useState([]);
 
-  const [showNotAnswered, setShowNotAnswered] = useState(false);
+  // Note; by default show not answered questions
+  const [showNotAnswered, setShowNotAnswered] = useState(true);
   const [notAnswered, setNotAnswered] = useState([]);
 
   // Note: populate Redux store with user and question data
@@ -58,15 +60,15 @@ const Dashboard = () => {
     try {
       if (questionData && currentAuthedUser && userData) {
         //1. Get array of answered and not answered
-        const { answered, notAnswered } = sortQuestions(
+        const { answeredArr, notAnsweredArr } = sortQuestions(
           currentAuthedUser.authedId,
           questionData,
           userData
         );
 
         //2. Sort by timestamps
-        const sortedAnswered = sortByTimestamps(answered);
-        const sortedUnanswered = sortByTimestamps(notAnswered);
+        const sortedAnswered = sortByTimestamps(answeredArr);
+        const sortedUnanswered = sortByTimestamps(notAnsweredArr);
 
         //3. Format timestamps .. add formattedTimestamp attribute
         const formattedAnswered = formatDates(sortedAnswered);
@@ -79,7 +81,7 @@ const Dashboard = () => {
           throw new Error("Could not prepare question for rendering.");
         }
       } else {
-        throw new Error("Question data not available.");
+        throw new Error("App data not available.");
       }
     } catch (error) {
       setIsError(true);
@@ -125,6 +127,8 @@ const Dashboard = () => {
     </article>
   ));
 
+  console.log("renderAnswered: ", renderAnswered);
+
   const renderNotAnswered = notAnswered.map((question) => (
     <article className="question-article-container" key={question.id}>
       <h3>Question Author:&nbsp;&nbsp;{question.author}</h3>
@@ -149,7 +153,7 @@ const Dashboard = () => {
     </article>
   ));
 
-  console.log("renderAnswered: ", renderAnswered);
+  console.log("renderNotAnswered: ", renderNotAnswered);
 
   return (
     <div className="dasboard-container">
@@ -163,7 +167,7 @@ const Dashboard = () => {
           wrapperClass=""
           visible={true}
         />
-      ) : currentAuthedUser && answered && notAnswered ? (
+      ) : currentAuthedUser && renderAnswered && renderNotAnswered ? (
         <Fragment>
           <div className="dasboard-auth-heading">
             Welcome back <h3>{currentAuthedUser.authedName}</h3>
@@ -174,10 +178,35 @@ const Dashboard = () => {
           <button onClick={onLogOut} type="button">
             Log Out
           </button>
-          <button onClick={() => setShowAnswered(true)}>Answered</button>
-          <button onClick={() => setShowNotAnswered(true)}>Not Answered</button>
+          <button
+            onClick={() => {
+              setShowAnswered(true);
+              setShowNotAnswered(false);
+            }}
+          >
+            Answered
+          </button>
+          <button
+            onClick={() => {
+              setShowAnswered(false);
+              setShowNotAnswered(true);
+            }}
+          >
+            Not Answered
+          </button>
           <section className="question-container">
-            {showAnswered ? renderAnswered : renderNotAnswered}
+            {showAnswered && (
+              <Fragment>
+                <h2>Already Answered:</h2>
+                {renderAnswered}
+              </Fragment>
+            )}
+            {showNotAnswered && (
+              <Fragment>
+                <h2>Not Answered:</h2>
+                {renderNotAnswered}
+              </Fragment>
+            )}
           </section>
         </Fragment>
       ) : (

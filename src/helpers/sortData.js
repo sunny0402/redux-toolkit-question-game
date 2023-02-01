@@ -123,16 +123,16 @@ const auth = "johndoe";
 
 // Note: returns an array of answered & notAnswered question ids for currently authed user
 export const sortQuestions = (authId, questions, users) => {
-  const answered = [];
-  const notAnswered = [];
+  const answeredArr = [];
+  const notAnsweredArr = [];
   for (let qId in questions) {
     if (qId in users[authId].answers) {
-      answered.push(questions[qId]);
+      answeredArr.push(questions[qId]);
     } else {
-      notAnswered.push(questions[qId]);
+      notAnsweredArr.push(questions[qId]);
     }
   }
-  return { answered, notAnswered };
+  return { answeredArr, notAnsweredArr };
 };
 
 // DEBUG
@@ -161,11 +161,15 @@ export const formatDates = (arrOfQuestions) => {
 
 // Test
 //1. Get array of answered and not answered
-const { answered, notAnswered } = sortQuestions(auth, questionData, users);
+const { answeredArr, notAnsweredArr } = sortQuestions(
+  auth,
+  questionData,
+  users
+);
 
 //2. Sort by timestamps
-const sortedAnswered = sortByTimestamps(answered);
-const sortedUnanswered = sortByTimestamps(notAnswered);
+const sortedAnswered = sortByTimestamps(answeredArr);
+const sortedUnanswered = sortByTimestamps(notAnsweredArr);
 
 //3. Format timestamps
 const formattedAnswered = formatDates(sortedAnswered);
