@@ -5,6 +5,7 @@ import Login from "./features/authedUser/Login";
 import Dashboard from "./Dashboard";
 import { AuthorizedRoute } from "./AuthorizedRoute";
 import "./App.css";
+import { NewQuestion } from "./features/question/NewQuestion";
 
 function App() {
   return (
@@ -15,14 +16,15 @@ function App() {
             Dashboard
           </Link>
           <h2>Would You Rather?</h2>
-          <Link to="/anotherRoute" className="link-btn">
-            PlaceHolder
+          <Link to="/add" className="link-btn">
+            Ask a Question
           </Link>
         </div>
         <Routes>
           <Route path="/login" element={<Login />} />
           <Route element={<AuthorizedRoute />}>
             <Route path="/" element={<Dashboard />} />
+            <Route path="/add" element={<NewQuestion />} />
           </Route>
         </Routes>
 

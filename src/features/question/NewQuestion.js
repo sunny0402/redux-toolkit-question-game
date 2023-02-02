@@ -3,7 +3,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { Circles } from "react-loader-spinner";
 import { useNavigate, Link } from "react-router-dom";
 
-import { createNewQuestion } from "./questionSlice";
+import { handleSaveQuestion } from "./questionSlice";
 
 export const NewQuestion = () => {
   const [optionOneText, setOptionOneText] = useState("");
@@ -15,13 +15,14 @@ export const NewQuestion = () => {
   const currentAuthedUser = useSelector((state) => state.authUser);
 
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   //Note:  update question slice of state by creating a new question
   const onSaveQuestionClicked = () => {
     if (optionOneText && optionTwoText) {
       //   update state
       dispatch(
-        createNewQuestion({
+        handleSaveQuestion({
           optionOneText,
           optionTwoText,
           author: currentAuthedUser.authedId,
@@ -30,6 +31,8 @@ export const NewQuestion = () => {
       // clear input fields
       setOptionOneText("");
       setOptionTwoText("");
+
+      navigate("/");
     }
   };
 

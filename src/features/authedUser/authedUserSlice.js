@@ -1,14 +1,12 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { getUsers, getQuestions } from "../../api";
 
-// Note: form submission only gives send auth_id to the reducer
+// Note: form submission sends auth_id to the reducer
 export const loginUser = createAsyncThunk(
   "authUser/login",
   async (auth_id, thunkAPI) => {
     try {
-      console.log("auth_id: ", auth_id);
       const response = await getUsers();
-      console.log("response", response);
 
       if (response) {
         const authUserId = Object.keys(response).find(
@@ -18,7 +16,7 @@ export const loginUser = createAsyncThunk(
         const authUserName = response[authUserId].name;
         const authUserAvatar = response[authUserId].avatarURL;
 
-        // Note: set the token as the authedUser to persist login
+        // Note: set the token as the authedUserId to persist login on page reload
         localStorage.setItem("token", authUserId);
 
         // Note use returned values to update authUser slice
@@ -26,8 +24,8 @@ export const loginUser = createAsyncThunk(
         return { authUserId, authUserName, authUserAvatar };
       }
     } catch (e) {
-      console.log("Error", e.response);
-      thunkAPI.rejectWithValue(e.response);
+      console.log("Error", e);
+      thunkAPI.rejectWithValue(e);
     }
   }
 );
@@ -50,7 +48,7 @@ export const authedUserSlice = createSlice({
       return initialAuthState;
     },
   },
-  // Note: updating state with returned values of loginUser thunk
+  // Note: update state with returned values of loginUser thunk
   extraReducers: (builder) => {
     builder
       .addCase(loginUser.fulfilled, (state, action) => {

@@ -25,8 +25,12 @@ const Dashboard = () => {
   const { userData, isFetchingUsers, isGetUsersSuccess } = useSelector(
     (state) => state.users
   );
-  const { questionData, isFetchingQuestions, isGetQuestionsSuccess } =
-    useSelector((state) => state.questions);
+  const {
+    questionData,
+    isFetchingQuestions,
+    isGetQuestionsSuccess,
+    isSaveQuestionSuccess,
+  } = useSelector((state) => state.questions);
 
   // Note: component state
   const [isError, setIsError] = useState(false);
@@ -40,31 +44,38 @@ const Dashboard = () => {
 
   // Note: populate Redux store with user and question data
   useEffect(() => {
+    console.log(
+      ">>>DEBUG dispatch(handleGetUsers() AND dispatch(handleGetQuestions()"
+    );
     try {
-      if (!isFetchingUsers && !isGetUsersSuccess) {
-        dispatch(handleGetUsers());
-      }
-      if (!isFetchingQuestions && !isGetQuestionsSuccess) {
-        // Note: Get question data
-        dispatch(handleGetQuestions());
-      }
+      dispatch(handleGetUsers());
+      dispatch(handleGetQuestions());
     } catch (error) {
       setIsError(true);
     }
+    // DEBUG questions do not appear after page reload
+    // return () => {};
+    //Note: runs on first render
   }, []);
 
   // Note: sort and format questions for render
   // Update component state: setAnswered(formattedAnswered) & setNotAnswered(formattedNotAnswered);
-  //
   useEffect(() => {
     try {
       if (questionData && currentAuthedUser && userData) {
+        console.log(
+          ">>>useEffect .... sort, format data, update component state"
+        );
+        console.log(">>>questionData: ", questionData);
+        console.log(">>>DEBUG userData: ", userData);
         //1. Get array of answered and not answered
         const { answeredArr, notAnsweredArr } = sortQuestions(
           currentAuthedUser.authedId,
           questionData,
           userData
         );
+
+        console.log("answeredArr: ", answeredArr);
 
         //2. Sort by timestamps
         const sortedAnswered = sortByTimestamps(answeredArr);
@@ -77,6 +88,8 @@ const Dashboard = () => {
         setAnswered(formattedAnswered);
         setNotAnswered(formattedNotAnswered);
 
+        console.log("formattedAnswered: ", formattedAnswered);
+
         if (!formattedAnswered || !formattedNotAnswered) {
           throw new Error("Could not prepare question for rendering.");
         }
@@ -87,7 +100,8 @@ const Dashboard = () => {
       setIsError(true);
       console.error(error);
     }
-  }, [isGetQuestionsSuccess]); //Note: run effect once get data
+    //Note: runs on first render and re-runx if isSaveQuestionSuccess changes
+  }, [isSaveQuestionSuccess]);
 
   // Note: if error getting data navigate to login
   useEffect(() => {
@@ -101,7 +115,7 @@ const Dashboard = () => {
     navigate("/login");
   };
 
-  console.log("answered: ", answered);
+  // console.log("answered: ", answered);
 
   const renderAnswered = answered.map((question) => (
     <article className="question-article-container" key={question.id}>
@@ -127,7 +141,7 @@ const Dashboard = () => {
     </article>
   ));
 
-  console.log("renderAnswered: ", renderAnswered);
+  // console.log("renderAnswered: ", renderAnswered);
 
   const renderNotAnswered = notAnswered.map((question) => (
     <article className="question-article-container" key={question.id}>
@@ -153,7 +167,7 @@ const Dashboard = () => {
     </article>
   ));
 
-  console.log("renderNotAnswered: ", renderNotAnswered);
+  // console.log("renderNotAnswered: ", renderNotAnswered);
 
   return (
     <div className="dasboard-container">
