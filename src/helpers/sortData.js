@@ -1,5 +1,3 @@
-// TODO: get answered questions
-// TODO: get unanswered questions
 let questionData = {
   "8xf0y6ziyjabvozdd253nd": {
     id: "8xf0y6ziyjabvozdd253nd",
@@ -118,10 +116,41 @@ let users = {
 };
 
 const auth = "johndoe";
-
 // console.log("auth: ", auth);
 
-// Note: returns an array of answered & notAnswered question ids for currently authed user
+/**
+ * For <Leaderboard /> this function returns an array of objects.
+ * Each object contains {id, answerCount, askCount, score}
+ *
+ * @param {object} userData { id: {userInfo},id: {userInfo}, ...]
+ * @returns {array} [{id,answerCount, askCount, score}, ...]
+ */
+export const userScores = (userData) => {
+  const leaderBoardArr = [];
+  for (let [userId, userObject] of Object.entries(userData)) {
+    let answerCount = Object.keys(userData[userId].answers).length;
+    let askCount = userData[userId].questions.length;
+    let score = answerCount + askCount;
+
+    leaderBoardArr.push({
+      id: userId,
+      answerCount: answerCount,
+      askCount: askCount,
+      score: score,
+    });
+  }
+  return leaderBoardArr.sort((a, b) => b.score - a.score);
+};
+
+/**
+ * For <Dashboard /> returns an array of answered
+ * and notAnswered question ids for currently authed user
+ *
+ * @param {array} authId [{question1},{question2},...]
+ * @param {object} questions [{question1},{question2},...]
+ * @param {object} users [{question1},{question2},...]
+ * @returns {object} { answeredArr, notAnsweredArr }
+ */
 export const sortQuestions = (authId, questions, users) => {
   const answeredArr = [];
   const notAnsweredArr = [];
@@ -135,17 +164,22 @@ export const sortQuestions = (authId, questions, users) => {
   return { answeredArr, notAnsweredArr };
 };
 
-// DEBUG
-// const { answered, notAnswered } = sortQuestions(auth, questionData, users);
-// console.log("answered: ", answered);
-// console.log("notAnswered: ", notAnswered);
-
-// Note: sort an array of question objects by timestamp
+/**
+ * For <Dashboard /> sort an array of question objects by timestamp
+ *
+ * @param {array} arrOfQuestions [{question1},{question2},...]
+ * @returns {array} Most recent first.
+ */
 export const sortByTimestamps = (arrOfQuestions) => {
   return arrOfQuestions.sort((a, b) => b.timestamp - a.timestamp);
 };
 
-// Note: modify timestamp attribute of question object in arrOfQuestions
+/**
+ * modify timestamp attribute of question object in arrOfQuestions
+ *
+ * @param {array} arrOfQuestions [{question1},{question2},...]
+ * @returns {array}  formattedQuestions
+ */
 export const formatDates = (arrOfQuestions) => {
   let formattedQuestions = [];
   for (let i = 0; i < arrOfQuestions.length; i++) {
@@ -178,7 +212,37 @@ const formattedNotAnswered = formatDates(sortedUnanswered);
 // console.log("formattedAnswered: ", formattedAnswered);
 // console.log("formattedNotAnswered: ", formattedNotAnswered);
 
+/**
+ * For <QuestionResult />
+ *
+ * @param {object} questionObject questionData[questionId]
+ * @returns {object} {option1Votes: 7/10, option2Votes: 3/10}
+ */
+export const tabulateVotes = (questionObject) => {
+  const totalVotes =
+    questionObject.optionOne.votes.length +
+    questionObject.optionTwo.votes.length;
+  const option1Votes = questionObject.optionOne.votes.length / totalVotes;
+  const option2Votes = questionObject.optionTwo.votes.length / totalVotes;
+  return { option1Votes, option2Votes };
+};
+
+/**
+ * modify timestamp
+ *
+ * @param {number} time 1467166872634
+ * @returns {string}  formattedTimeStamp
+ */
+export const formatTime = (time) => {
+  let formattedTimeStamp;
+  let d = new Date(time);
+  const timeString = d.toLocaleTimeString("en-US");
+  formattedTimeStamp =
+    timeString.slice(0, 5) +
+    timeString.slice(-2) +
+    " | " +
+    d.toLocaleDateString();
+  return formattedTimeStamp;
+};
+
 // TODO create a LeaderBoard
-// TODO; for each user calculate the number of answered questions & unanswered
-// TODO: createNewQuestion form ...
-// TODO: actions need to be dispatched to update users.id.questions & users.id.answers

@@ -2,7 +2,7 @@ import React from "react";
 import { Navigate, Route, Outlet, useLocation } from "react-router-dom";
 import { useSelector } from "react-redux";
 
-export const AuthorizedRoute = () => {
+const AuthorizedRoute = () => {
   const location = useLocation();
   let currentAuthedUser = useSelector((state) => state.authUser);
   let authToken = localStorage.getItem("token");
@@ -14,3 +14,5 @@ export const AuthorizedRoute = () => {
     return <Navigate to="/login" state={{ from: location }} replace />;
   }
 };
+
+export default AuthorizedRoute;

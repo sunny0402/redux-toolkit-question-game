@@ -10,8 +10,15 @@ A question game "Would You Rather?" built with Redux Toolkit.
 
 - createAsyncThunk()
 - https://redux-toolkit.js.org/api/createAsyncThunk#payloadcreator:
+
   - A "payload creator" callback function that returns a Promise containing some data,or a rejected Promise with an error
   - https://redux-toolkit.js.org/api/createAsyncThunk#return-value
   - thunkAPI argument gives acccess to requestId, rejectWithValue(value, [meta]), etc ...
   - returns pending, fulfilled, rejected
   - if the promise resolved successfully, dispatch the fulfilled action with the promise value as action.payload
+
+- TODO:
+- Persist data:
+- https://frontend-digest.com/setting-up-a-full-stack-react-application-835c2a37eb7a
+- https://github.com/typicode/json-server
+-

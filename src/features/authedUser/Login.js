@@ -10,6 +10,7 @@ const Login = () => {
   const navigate = useNavigate();
 
   const availableAppUsers = ["sarahedo", "tylermcginnis", "johndoe"];
+  // TODO disable login button if user not selected
   const [selectedUser, setSelectedUser] = useState("");
   const onUserChanged = (e) => setSelectedUser(e.target.value);
 

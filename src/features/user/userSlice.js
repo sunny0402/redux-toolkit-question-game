@@ -1,6 +1,11 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { getUsers } from "../../api";
 
+import { handleAnswerQuestion } from "../question/questionSlice";
+
+// TODO handleSaveQuestion should also update question array in users slice
+import { handleSaveQuestion } from "../question/questionSlice";
+
 // Note: Get data from backend and update Redux user & quetion slice ....
 // this will be app data for all authed routes
 export const handleGetUsers = createAsyncThunk(
@@ -8,7 +13,6 @@ export const handleGetUsers = createAsyncThunk(
   async (thunkAPI) => {
     try {
       const appUsers = await getUsers();
-      console.log("appUsers: ", appUsers);
 
       // Note: API request successful, return of thunk in action.payload of handleGetUsers.fulfilled
 
@@ -16,7 +20,6 @@ export const handleGetUsers = createAsyncThunk(
         return appUsers;
       }
     } catch (e) {
-      console.log("Error", e.response);
       thunkAPI.rejectWithValue(e.response);
     }
   }
@@ -24,8 +27,11 @@ export const handleGetUsers = createAsyncThunk(
 
 const initialUserState = {
   userData: {},
+  // TODO make sure not misuing this property, only for handleGetUsers
   isFetchingUsers: false,
   isGetUsersSuccess: false,
+  isUpdatingUserAnswers: false,
+  isUserAnswersUpdated: false,
 };
 
 export const userSlice = createSlice({
@@ -46,6 +52,39 @@ export const userSlice = createSlice({
       })
       .addCase(handleGetUsers.pending, (state) => {
         state.isFetchingUsers = true;
+      })
+      // Note: also update users slice when creating a new question
+      // specifically add the new question to question array
+      .addCase(handleSaveQuestion.fulfilled, (state, action) => {
+        const { author, id } = action.payload;
+        // Test
+        state.userData[author] = {
+          ...state.userData[author],
+          questions: state.userData[author].questions.concat([id]),
+        };
+        // state.userData[formattedQuestion.author] = {
+        //   ...state.userData[formattedQuestion.author],
+        //   questions: state.userData[formattedQuestion.author].questions.concat([
+        //     formattedQuestion.id,
+        //   ]),
+        // };
+      })
+      // Note: not only udate questions slice but also users slice when a question is answered
+      .addCase(handleAnswerQuestion.fulfilled, (state, action) => {
+        const { authedUser, qid, answer } = action.payload;
+        // Note: with Redux Toolkit can update the specific item in state
+        state.userData[authedUser] = {
+          ...state.userData[authedUser],
+          answers: {
+            ...state.userData[authedUser].answers,
+            [qid]: answer,
+          },
+        };
+        state.isUpdatingUserAnswers = false;
+        state.isUserAnswersUpdated = true;
+      })
+      .addCase(handleAnswerQuestion.pending, (state) => {
+        state.isUpdatingUserAnswers = true;
       });
   },
 });

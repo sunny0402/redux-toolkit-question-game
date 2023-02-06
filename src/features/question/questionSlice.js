@@ -1,14 +1,13 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { getQuestions, saveQuestion } from "../../api";
+import { getQuestions, saveQuestion, saveQuestionAnswer } from "../../api";
 
 // Note: Get data from backend,_DATA.js, and update Redux  quetion slice
-// Note: API request successful, return of thunk in action.payload of handleGetQuestion.fulfilled
+// API request successful, return of thunk in action.payload of handleGetQuestion.fulfilled
 export const handleGetQuestions = createAsyncThunk(
   "questions/appQuestions",
   async (thunkAPI) => {
     try {
       const appQuestions = await getQuestions();
-      console.log("appQuestions: ", appQuestions);
 
       if (appQuestions) {
         return appQuestions;
@@ -20,8 +19,10 @@ export const handleGetQuestions = createAsyncThunk(
   }
 );
 
-// Note: dispatched on NeqQuestion form submission: optionOneText, optionTwoText, author
-// savedNewQuestion returned by api.saveQuestion
+// Note: dispatched on NeWQuestion form submission: optionOneText, optionTwoText, author
+// savedNewQuestion returned by api.saveQuestion()
+// handleSaveQuestion only updates _DATA.js and question slice, not user slice
+// so to get latest data from users, like a users answered questions, need to run handleGetUsers
 export const handleSaveQuestion = createAsyncThunk(
   "questions/saveQuestion",
   async ({ optionOneText, optionTwoText, author }, thunkAPI) => {
@@ -43,6 +44,26 @@ export const handleSaveQuestion = createAsyncThunk(
   }
 );
 
+// Note: api.saveQuestionAnswer({ authedUser, qid, answer }) has no return value
+// handleAnswerQuestion only updates _DATA.js, need to run handleGetQuestions, HandleGetUsers
+// to save this answer to Redux store, accomplish this with useEffect in UI component
+export const handleAnswerQuestion = createAsyncThunk(
+  "questions/answerQuestion",
+  async ({ authedUser, qid, answer }, thunkAPI) => {
+    try {
+      const newAnswer = { authedUser, qid, answer };
+      console.log("newAnswer: ", newAnswer);
+
+      await saveQuestionAnswer(newAnswer);
+
+      return newAnswer;
+    } catch (e) {
+      console.log("Error", e);
+      thunkAPI.rejectWithValue("API request to save question answer failed.");
+    }
+  }
+);
+
 const initialQuestionState = {
   questionData: {},
   isFetchingQuestions: false,
@@ -51,6 +72,8 @@ const initialQuestionState = {
   isSavingQuestion: false,
   isQuestionError: false,
   isErrorMessage: "",
+  isNewAnsweSaved: false,
+  isSavingNewAnswer: false,
 };
 
 export const questionSlice = createSlice({
@@ -79,19 +102,54 @@ export const questionSlice = createSlice({
         state.isErrorMessage = action.payload;
       })
       // Note: api.saveQuestion(question)
+      // update Redux store immediately after updating _DATA.js with handeSaveQuestion
       .addCase(handleSaveQuestion.fulfilled, (state, action) => {
+        console.log(
+          ">>>DEBUG: handleSaveQuestion.fulfilled: action.payload: ",
+          action.payload
+        );
+
+        const formattedQuestion = { ...action.payload };
+
         state.questionData = {
           ...state.questionData,
-          [action.payload.id]: action.payload,
+          [formattedQuestion.id]: formattedQuestion,
         };
         state.isSavingQuestion = false;
         state.isSaveQuestionSuccess = true;
       })
+
       .addCase(handleSaveQuestion.pending, (state) => {
         state.isSavingQuestion = true;
         state.isSaveQuestionSuccess = false;
       })
+
       .addCase(handleSaveQuestion.rejected, (state, action) => {
+        state.isQuestionError = true;
+        state.isErrorMessage = action.payload;
+      })
+
+      // Note: api.saveQuestionAnswer({ authedUser, qid, answer })
+      .addCase(handleAnswerQuestion.fulfilled, (state, action) => {
+        const { authedUser, qid, answer } = action.payload;
+        state.questionData = {
+          ...state.questionData,
+          [qid]: {
+            ...state.questionData[qid],
+            [answer]: {
+              ...state.questionData[qid][answer],
+              votes: state.questionData[qid][answer].votes.concat([authedUser]),
+            },
+          },
+        };
+        state.isNewAnsweSaved = true;
+        state.isSavingNewAnswer = false;
+      })
+
+      .addCase(handleAnswerQuestion.pending, (state) => {
+        state.isSavingNewAnswer = true;
+      })
+      .addCase(handleAnswerQuestion.rejected, (state, action) => {
         state.isQuestionError = true;
         state.isErrorMessage = action.payload;
       });

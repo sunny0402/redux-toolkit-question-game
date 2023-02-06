@@ -5,7 +5,7 @@ import { useNavigate, Link } from "react-router-dom";
 
 import { handleSaveQuestion } from "./questionSlice";
 
-export const NewQuestion = () => {
+const NewQuestion = () => {
   const [optionOneText, setOptionOneText] = useState("");
   const [optionTwoText, setOptionTwoText] = useState("");
 
@@ -62,3 +62,5 @@ export const NewQuestion = () => {
     </section>
   );
 };
+
+export default NewQuestion;
