@@ -1,10 +1,14 @@
 import React from "react";
 import { BrowserRouter, Routes, Route, Link } from "react-router-dom";
 
+import { useSelector } from "react-redux";
+
 import Login from "./features/authedUser/Login";
 import Dashboard from "./Dashboard";
 import AuthorizedRoute from "./AuthorizedRoute";
 import LeaderBoard from "./features/user/Leaderboard";
+
+import Navigation from "./Navigation";
 
 import NewQuestion from "./features/question/NewQuestion";
 import QuestionDetails from "./features/question/QuestionDetails";
@@ -12,23 +16,16 @@ import NotFound from "./NotFound";
 import "./App.css";
 
 function App() {
+  const currentAuthedUser = useSelector((state) => state.authUser);
+  const authToken = localStorage.getItem("token");
+  let authed = false;
+  if (currentAuthedUser.authedId === authToken) {
+    authed = true;
+  }
   return (
     <BrowserRouter>
       <div className="app-container">
-        {/* TODO display NAV only if authed ....*/}
-        {/* TODO maybe display avatar and logout button here ....*/}
-        <div className="navigation">
-          <Link to="/" className="link-btn">
-            Dashboard
-          </Link>
-          <h2>Would You Rather?</h2>
-          <Link to="/add" className="link-btn">
-            Ask a Question
-          </Link>
-          <Link to="/leaderboard" className="link-btn">
-            Leaderboard
-          </Link>
-        </div>
+        {authed && <Navigation />}
         <Routes>
           <Route path="/login" element={<Login />} />
           <Route element={<AuthorizedRoute />}>
@@ -40,7 +37,7 @@ function App() {
             />
             <Route path="/leaderboard" element={<LeaderBoard />} />
           </Route>
-          <Route path="/404" element={<NotFound />} />
+          <Route path="/*" element={<NotFound />} />
         </Routes>
 
         <div className="app-footer">

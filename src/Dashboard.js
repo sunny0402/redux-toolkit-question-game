@@ -14,8 +14,6 @@ import {
   formatDates,
 } from "./helpers/sortData";
 
-import { QuestionDetails } from "./features/question/QuestionDetails";
-
 const Dashboard = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -99,10 +97,10 @@ const Dashboard = () => {
     }
   }, [isError]);
 
-  const onLogOut = () => {
-    localStorage.removeItem("token");
-    navigate("/login");
-  };
+  // const onLogOut = () => {
+  //   localStorage.removeItem("token");
+  //   navigate("/login");
+  // };
 
   const renderAnswered = answered.map((question) => (
     <article className="question-article-container" key={question.id}>
@@ -134,8 +132,8 @@ const Dashboard = () => {
   const renderNotAnswered = notAnswered.map((question) => (
     <article className="question-article-container" key={question.id}>
       <h3>Question Author:&nbsp;&nbsp;{question.author}</h3>
-      <h4>Question Id::&nbsp;&nbsp;{question.id}</h4>
-      <h4>Question Time::&nbsp;&nbsp;{question.formattedTimestamp}</h4>
+      <h4>Question Id:&nbsp;&nbsp;{question.id}</h4>
+      <h4>Question Time:&nbsp;&nbsp;{question.formattedTimestamp}</h4>
       <p className="question-option">
         Option One:&nbsp;&nbsp;{question.optionOne.text}
       </p>
@@ -172,15 +170,6 @@ const Dashboard = () => {
         />
       ) : currentAuthedUser && renderAnswered && renderNotAnswered ? (
         <Fragment>
-          <div className="dasboard-auth-heading">
-            Welcome back <h3>{currentAuthedUser.authedName}</h3>
-            <div className="avatar-container">
-              <img src={currentAuthedUser.authedAvatar} alt="user avatar" />
-            </div>
-          </div>
-          <button onClick={onLogOut} type="button">
-            Log Out
-          </button>
           <button
             onClick={() => {
               setShowAnswered(true);
