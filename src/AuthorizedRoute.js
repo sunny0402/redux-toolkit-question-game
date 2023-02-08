@@ -14,17 +14,7 @@ const AuthorizedRoute = () => {
 
   if (currentAuthedUser.authedId === authToken) {
     // Note: React Router v6: <Route path="/dashboard" element={<Dashboard authed={true} />} />
-    return (
-      // Test
-      // <>
-      //   <Navigation />
-      //   <Route path="/home" element={<Dashboard />} />
-      //   <Route path="/add" element={<NewQuestion />} />
-      //   <Route path="/questions/:questionId" element={<QuestionDetails />} />
-      //   <Route path="/leaderboard" element={<LeaderBoard />} />
-      // </>
-      <Outlet />
-    );
+    return <Outlet authed={true} />;
   } else {
     return <Navigate to="/login" state={{ from: location }} replace />;
   }

@@ -97,61 +97,71 @@ const Dashboard = () => {
     }
   }, [isError]);
 
-  // const onLogOut = () => {
-  //   localStorage.removeItem("token");
-  //   navigate("/login");
-  // };
-
   const renderAnswered = answered.map((question) => (
     <article className="question-article-container" key={question.id}>
-      <h3>Question Author:&nbsp;&nbsp;{question.author}</h3>
-      <h4>Question Id::&nbsp;&nbsp;{question.id}</h4>
-      <h4>Question Time::&nbsp;&nbsp;{question.formattedTimestamp}</h4>
-      <p className="question-option">
-        Option One:&nbsp;&nbsp;{question.optionOne.text}
-      </p>
-      <p className="question-option">
-        Option One Votes:{question.optionOne.votes.join(", ")}
-      </p>
-      <p className="question-option">
-        Option Two:&nbsp;&nbsp;{question.optionTwo.text}
-      </p>
-      <p className="question-option">
-        Option Two Votes:&nbsp;&nbsp;{question.optionTwo.votes.join(", ")}
-      </p>
-      <Link
-        to={`/questions/${question.id}`}
-        // state={{ answered: true }}
-        className="link-btn"
+      <div className="avatar-container">
+        <img src={userData[question.author].avatarURL} alt="user avatar" />
+      </div>
+      <h3>
+        {userData[question.author].name}&nbsp;&nbsp; asks would you rather?
+      </h3>
+      <div
+        className={
+          question.optionOne.votes.includes(currentAuthedUser.authedId)
+            ? "highlight-optionOne-container"
+            : "option-container"
+        }
       >
-        View Question Details
+        <p className="question-option">
+          Option One:&nbsp;&nbsp;{question.optionOne.text}
+        </p>
+        <p className="question-option">
+          Option One Votes:{question.optionOne.votes.join(", ")}
+        </p>
+      </div>
+
+      <div
+        className={
+          question.optionTwo.votes.includes(currentAuthedUser.authedId)
+            ? "highlight-optionTwo-container"
+            : "option-container"
+        }
+      >
+        <p className="question-option">
+          Option Two:&nbsp;&nbsp;{question.optionTwo.text}
+        </p>
+        <p className="question-option">
+          Option Two Votes:&nbsp;&nbsp;{question.optionTwo.votes.join(", ")}
+        </p>
+      </div>
+      <p>Date asked:&nbsp;&nbsp;{question.formattedTimestamp}</p>
+      <Link to={`/questions/${question.id}`} className="link-btn">
+        <button>View Question Details</button>
       </Link>
     </article>
   ));
 
   const renderNotAnswered = notAnswered.map((question) => (
     <article className="question-article-container" key={question.id}>
-      <h3>Question Author:&nbsp;&nbsp;{question.author}</h3>
-      <h4>Question Id:&nbsp;&nbsp;{question.id}</h4>
-      <h4>Question Time:&nbsp;&nbsp;{question.formattedTimestamp}</h4>
+      <div className="avatar-container">
+        <img src={userData[question.author].avatarURL} alt="user avatar" />
+      </div>
+      <h3>
+        {userData[question.author].name}&nbsp;&nbsp; asks would you rather?
+      </h3>
       <p className="question-option">
         Option One:&nbsp;&nbsp;{question.optionOne.text}
       </p>
       <p className="question-option">
-        Option One Votes:{question.optionOne.votes.join(", ")}
-      </p>
-      <p className="question-option">
         Option Two:&nbsp;&nbsp;{question.optionTwo.text}
       </p>
-      <p className="question-option">
-        Option Two Votes:&nbsp;&nbsp;{question.optionTwo.votes.join(", ")}
-      </p>
+      <p>Date asked:&nbsp;&nbsp;{question.formattedTimestamp}</p>
       <Link
         to={`/questions/${question.id}`}
         // state={{ answered: false }}
         className="link-btn"
       >
-        View Question Details
+        <button>Answer Question</button>
       </Link>
     </article>
   ));

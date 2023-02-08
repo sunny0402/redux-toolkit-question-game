@@ -193,25 +193,6 @@ export const formatDates = (arrOfQuestions) => {
   return formattedQuestions;
 };
 
-// Test
-//1. Get array of answered and not answered
-const { answeredArr, notAnsweredArr } = sortQuestions(
-  auth,
-  questionData,
-  users
-);
-
-//2. Sort by timestamps
-const sortedAnswered = sortByTimestamps(answeredArr);
-const sortedUnanswered = sortByTimestamps(notAnsweredArr);
-
-//3. Format timestamps
-const formattedAnswered = formatDates(sortedAnswered);
-const formattedNotAnswered = formatDates(sortedUnanswered);
-
-// console.log("formattedAnswered: ", formattedAnswered);
-// console.log("formattedNotAnswered: ", formattedNotAnswered);
-
 /**
  * For <QuestionResult />
  *
@@ -224,6 +205,15 @@ export const tabulateVotes = (questionObject) => {
     questionObject.optionTwo.votes.length;
   const option1Votes = questionObject.optionOne.votes.length / totalVotes;
   const option2Votes = questionObject.optionTwo.votes.length / totalVotes;
+
+  const option1Percentage = Math.round(option1Votes * 100);
+  const option2Percentage = Math.round(option2Votes * 100);
+
+  const option1Count = `${questionObject.optionOne.votes.length} out of ${totalVotes}`;
+  const option2Count = `${questionObject.optionTwo.votes.length} out of ${totalVotes}`;
+
+  return { option1Percentage, option2Percentage, option1Count, option2Count };
+
   return { option1Votes, option2Votes };
 };
 
@@ -245,4 +235,21 @@ export const formatTime = (time) => {
   return formattedTimeStamp;
 };
 
-// TODO create a LeaderBoard
+// Test
+//1. Get array of answered and not answered
+// const { answeredArr, notAnsweredArr } = sortQuestions(
+//   auth,
+//   questionData,
+//   users
+// );
+
+//2. Sort by timestamps
+// const sortedAnswered = sortByTimestamps(answeredArr);
+// const sortedUnanswered = sortByTimestamps(notAnsweredArr);
+
+//3. Format timestamps
+// const formattedAnswered = formatDates(sortedAnswered);
+// const formattedNotAnswered = formatDates(sortedUnanswered);
+
+// console.log("formattedAnswered: ", formattedAnswered);
+// console.log("formattedNotAnswered: ", formattedNotAnswered);
