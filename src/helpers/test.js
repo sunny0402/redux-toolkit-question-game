@@ -38,6 +38,30 @@ let users = {
     questions: ["6ni6ok3ym7mf1p33lnez", "xj352vofupe1dqz9emx13r"],
   },
 };
+
+const getLoginProfiles = (userData) => {
+  const loginProfiles = [];
+  for (let userId in userData) {
+    loginProfiles[userId] = {};
+    loginProfiles[userId]["name"] = userData[userId].name;
+    loginProfiles[userId]["avatar"] = userData[userId].avatarURL;
+  }
+  return loginProfiles;
+};
+
+// Test
+// const loginInfo = getLoginProfiles(users);
+
+const loginInfo = {
+  userId1: { name: "First Name", avatar: "/images/avatar1.jpeg" },
+  userId1: { name: "Another Name", avatar: "/images/avatar2.jpeg" },
+  userId3: { name: "Hello World", avatar: "/images/avatar3.jpeg" },
+};
+console.log(">>>DEBUG loginInfo: ", loginInfo);
+console.log(">>>DEBUG loginInfo.length: ", loginInfo.length);
+console.log(">>>DEBUG loginInfo[johndoe] ", loginInfo["johndoe"]);
+console.log(">>>DEBUG typeof loginInfo ", typeof loginInfo);
+
 // TODO return [{userId,answerCount, askCount, score}, ...]
 const userScores = (userData) => {
   const leaderBoardArr = [];

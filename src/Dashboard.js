@@ -21,7 +21,7 @@ const Dashboard = () => {
   // Note: authedUser info set as part of login
   const currentAuthedUser = useSelector((state) => state.authUser);
 
-  // Note: from userSlice get status of thunk to get users
+  // Note: from userSlice get user infp and status of thunk to get users
   const { userData, isFetchingUsers, isGetUsersSuccess } = useSelector(
     (state) => state.users
   );
@@ -44,6 +44,7 @@ const Dashboard = () => {
   const [notAnswered, setNotAnswered] = useState([]);
 
   // Note: populate Redux store with user and question data
+  // TODO: userData should already be poulated in <Login />
   useEffect(() => {
     try {
       dispatch(handleGetUsers());

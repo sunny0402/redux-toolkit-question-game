@@ -1,23 +1,42 @@
 import React, { Fragment, useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { loginUser, clearState } from "./authedUserSlice";
 import { useNavigate } from "react-router-dom";
-import toast from "react-hot-toast";
+
+import { loginUser, clearState } from "./authedUserSlice";
+import { handleGetUsers } from "../user/userSlice";
+import { getLoginProfiles } from "../../helpers/sortData";
+
 import { Circles } from "react-loader-spinner";
 
+// TODO header for Login page with no navigation
 const Login = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const availableAppUsers = ["sarahedo", "tylermcginnis", "johndoe"];
-  // TODO disable login button if user not selected
+  // const availableAppUsers = ["sarahedo", "tylermcginnis", "johndoe"];
+  const { userData, isFetchingUsers, isGetUsersSuccess } = useSelector(
+    (state) => state.users
+  );
+
   const [selectedUser, setSelectedUser] = useState("");
   const onUserChanged = (e) => setSelectedUser(e.target.value);
 
-  // Note: from authedUserSlice get status of thunk which gets authed user info
+  // Note: from authedUserSlice get status of thunk which verifies and sets authed user info
   const { isFetching, isSuccess, isError, errorMessage } = useSelector(
     (state) => state.authUser
   );
+
+  // Note: populate Redux store with user data
+  // that way can get available users and avatars, will only get question data in dashboard
+  useEffect(() => {
+    try {
+      dispatch(handleGetUsers());
+    } catch (error) {
+      console.log(error);
+    }
+  }, []);
+
+  const availableAppUsers = getLoginProfiles(userData);
 
   // Note: loginUser will verify that selected user in api.getUsers()
   // if loginUser.fulfilled, isSuccess wil be set to true
@@ -40,47 +59,66 @@ const Login = () => {
     if (isSuccess) {
       navigate("/");
     }
+    // TODO test error
     if (isError) {
-      toast.error(errorMessage);
+      console.log(errorMessage);
       dispatch(clearState());
     }
   }, [isSuccess, isError]);
 
   return (
     <Fragment>
-      <div className="login-container">
-        <div className="login-form-container">
+      {(isFetching || isFetchingUsers) && (
+        <div className="login-container">
+          <Circles
+            height="80"
+            width="80"
+            color="#4fa94d"
+            ariaLabel="circles-loading"
+            wrapperStyle={{}}
+            wrapperClass=""
+            visible={true}
+          />
+        </div>
+      )}
+
+      {isGetUsersSuccess && availableAppUsers && (
+        <div className="login-container">
+          <div className="login-heading">
+            <h2>Login</h2>
+          </div>
           <form className="login-form">
-            {isFetching && (
-              <Circles
-                height="80"
-                width="80"
-                color="#4fa94d"
-                ariaLabel="circles-loading"
-                wrapperStyle={{}}
-                wrapperClass=""
-                visible={true}
-              />
-            )}
-            {/* TODO: isError... */}
-            <div className="login-heading">
-              <h2>Login</h2>
-            </div>
             <label htmlFor="username-label">Select User</label>
             <select value={selectedUser} onChange={onUserChanged}>
               <option value="">Select a user</option>
-              {availableAppUsers.map((user) => (
-                <option key={user} value={user}>
-                  {user}
+              {Object.entries(availableAppUsers).map(([username, user]) => (
+                <option key={username} value={username}>
+                  {user.name}
                 </option>
               ))}
             </select>
-            <button type="button" onClick={handleLogin}>
-              Login
-            </button>
+            {selectedUser && (
+              <div className="avatar-option-container">
+                <br />
+                <img
+                  src={availableAppUsers[selectedUser].avatar}
+                  alt="user avatar"
+                />
+                <br />
+                <p>{availableAppUsers[selectedUser].name}</p>
+
+                <button
+                  type="button"
+                  onClick={handleLogin}
+                  disabled={!selectedUser}
+                >
+                  Login
+                </button>
+              </div>
+            )}
           </form>
         </div>
-      </div>
+      )}
     </Fragment>
   );
 };

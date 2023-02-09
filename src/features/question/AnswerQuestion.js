@@ -64,7 +64,12 @@ const AnswerQuestion = (props) => {
         />
         <label htmlFor="optionTwo">{theQuestion.optionTwo.text}</label>
 
-        <button type="button" onClick={onAnswerQuestion} disabled={submitted}>
+        {/* TODO check if disabled working correctly */}
+        <button
+          type="button"
+          onClick={onAnswerQuestion}
+          disabled={!selectedOption}
+        >
           Vote
         </button>
       </form>

@@ -48,9 +48,10 @@ export const authedUserSlice = createSlice({
       return initialAuthState;
     },
   },
-  // Note: update state with returned values of loginUser thunk
+
   extraReducers: (builder) => {
     builder
+      // Note: update state with returned values of loginUser thunk
       .addCase(loginUser.fulfilled, (state, action) => {
         // Note: authUserId, authUserName, authUserAvatar returned by thunk loginUser
         state.authedId = action.payload.authUserId;

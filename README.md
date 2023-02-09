@@ -22,3 +22,4 @@ A question game "Would You Rather?" built with Redux Toolkit.
 - https://frontend-digest.com/setting-up-a-full-stack-react-application-835c2a37eb7a
 - https://github.com/typicode/json-server
 - Pass Navigation as prop to Outlet https://stackoverflow.com/questions/70027979/passing-props-to-outlet-when-nestining-routes-in-react-router-v6
+- use toast for error popups: react-hot-toast

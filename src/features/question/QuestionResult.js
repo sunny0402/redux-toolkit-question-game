@@ -8,7 +8,8 @@ const QuestioResult = (props) => {
 
   console.log(">>>DEBUG QuestionResult: questionId: ", questionId);
 
-  // TODO pass a prop of which option voted for ... or getUsers and find authed user
+  // TODO highlight which option the authed user voted for as in Dashboard
+  // get user data ...
 
   const { questionData } = useSelector((state) => state.questions);
 

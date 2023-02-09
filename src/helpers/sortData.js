@@ -119,6 +119,31 @@ const auth = "johndoe";
 // console.log("auth: ", auth);
 
 /**
+ * For <Login /> get user id, name and avatar for login options
+ *
+ * @param {object} userData { id: {userInfo},id: {userInfo}, ...]
+ * @returns {array} [id1: {id1,name1,avatar1}, id2:{id2,name2,avatar2}, ...]
+ */
+// export const getLoginProfiles = (userData) => {
+//   const loginProfiles = [];
+//   for (let userId in userData) {
+//     loginProfiles[userId] = {};
+//     loginProfiles[userId]["name"] = userData[userId].name;
+//     loginProfiles[userId]["avatar"] = userData[userId].avatarURL;
+//   }
+//   return loginProfiles;
+// };
+export const getLoginProfiles = (userData) => {
+  const loginProfiles = {};
+  for (let userId in userData) {
+    loginProfiles[userId] = {};
+    loginProfiles[userId]["name"] = userData[userId].name;
+    loginProfiles[userId]["avatar"] = userData[userId].avatarURL;
+  }
+  return loginProfiles;
+};
+
+/**
  * For <Leaderboard /> this function returns an array of objects.
  * Each object contains {id, answerCount, askCount, score}
  *
