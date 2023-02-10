@@ -1,7 +1,8 @@
 # About
 
-A question game "Would You Rather?" built with Redux Toolkit.
-Mock api and backend.
+A game "Would You Rather?" built with Redux Toolkit.
+
+https://sunny-codes-would-you-rather.netlify.app/
 
 ## Notes / Resources / TODO
 
