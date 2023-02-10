@@ -6,24 +6,7 @@ import PercentageBar from "../../PercentageBar";
 const QuestioResult = (props) => {
   const { questionId } = props;
 
-  console.log(">>>DEBUG QuestionResult: questionId: ", questionId);
-
-  // TODO highlight which option the authed user voted for as in Dashboard
   const currentAuthedUser = useSelector((state) => state.authUser);
-  //   <div
-  //   className={
-  //     question.optionOne.votes.includes(currentAuthedUser.authedId)
-  //       ? "highlight-optionOne-container"
-  //       : "option-container"
-  //   }
-  // >
-  //   <p className="question-option">
-  //     Option One:&nbsp;&nbsp;{question.optionOne.text}
-  //   </p>
-  //   <p className="question-option">
-  //     Option One Votes:{question.optionOne.votes.join(", ")}
-  //   </p>
-  // </div>
 
   const { questionData } = useSelector((state) => state.questions);
 

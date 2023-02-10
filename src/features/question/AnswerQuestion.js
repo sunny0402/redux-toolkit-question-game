@@ -28,7 +28,6 @@ const AnswerQuestion = (props) => {
 
   const onAnswerQuestion = () => {
     if (selectedOption) {
-      // TODO make sure in questions/users slice also cannot answer question twice
       dispatch(
         //Note: handleAnswerQuestion expects { authedUser, qid, answer }
         handleAnswerQuestion({
@@ -64,7 +63,6 @@ const AnswerQuestion = (props) => {
         />
         <label htmlFor="optionTwo">{theQuestion.optionTwo.text}</label>
 
-        {/* TODO check if disabled working correctly */}
         <button
           type="button"
           onClick={onAnswerQuestion}

@@ -8,12 +8,8 @@ const QuestionDetails = () => {
   const params = useParams();
   const { questionId } = params;
 
-  console.log(">>>DEBUG questionId: ", questionId);
-
   const [isError, setIsError] = useState(false);
   const [isAnswered, setIsAnswered] = useState(false);
-
-  console.log(">>>DEBUG isAnswered: ", isAnswered);
 
   // Note: object where key: id & value: id,author, timestamp, optionOne,optionTwo
   const { questionData } = useSelector((state) => state.questions);

@@ -28,10 +28,8 @@ export const handleSaveQuestion = createAsyncThunk(
   async ({ optionOneText, optionTwoText, author }, thunkAPI) => {
     try {
       const newQuestion = { optionOneText, optionTwoText, author };
-      console.log("newQuestion: ", newQuestion);
 
       const savedNewQuestion = await saveQuestion(newQuestion);
-      console.log("savedNewQuestion: ", savedNewQuestion);
 
       // Note: savedNewQuestion added to Redux store in handleSaveQuestion.fulfilled
       if (savedNewQuestion) {
@@ -52,7 +50,6 @@ export const handleAnswerQuestion = createAsyncThunk(
   async ({ authedUser, qid, answer }, thunkAPI) => {
     try {
       const newAnswer = { authedUser, qid, answer };
-      console.log("newAnswer: ", newAnswer);
 
       await saveQuestionAnswer(newAnswer);
 
@@ -104,11 +101,6 @@ export const questionSlice = createSlice({
       // Note: api.saveQuestion(question)
       // update Redux store immediately after updating _DATA.js with handeSaveQuestion
       .addCase(handleSaveQuestion.fulfilled, (state, action) => {
-        console.log(
-          ">>>DEBUG: handleSaveQuestion.fulfilled: action.payload: ",
-          action.payload
-        );
-
         const formattedQuestion = { ...action.payload };
 
         state.questionData = {

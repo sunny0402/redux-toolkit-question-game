@@ -4,7 +4,6 @@ import { useNavigate, Link } from "react-router-dom";
 
 const Navigation = () => {
   const currentAuthedUser = useSelector((state) => state.authUser);
-  //   TODO authToken should be const
   const navigate = useNavigate();
 
   const onLogOut = () => {

@@ -3,7 +3,6 @@ import { getUsers } from "../../api";
 
 import { handleAnswerQuestion } from "../question/questionSlice";
 
-// TODO handleSaveQuestion should also update question array in users slice
 import { handleSaveQuestion } from "../question/questionSlice";
 
 // Note: Get data from backend and update Redux user & quetion slice ....
@@ -27,7 +26,6 @@ export const handleGetUsers = createAsyncThunk(
 
 const initialUserState = {
   userData: {},
-  // TODO make sure not misuing this property, only for handleGetUsers
   isFetchingUsers: false,
   isGetUsersSuccess: false,
   isUpdatingUserAnswers: false,

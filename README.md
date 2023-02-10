@@ -5,23 +5,24 @@ Mock api and backend.
 
 ## Notes / Resources / TODO
 
+# Resources
+
 - Redux User Registration Tutorial: https://cloudnweb.dev/2021/02/modern-react-redux-tutotials-redux-toolkit-login-user-registration/
 
 - React Hook Form for form validation: https://react-hook-form.com/
 
+## Notes
+
 - createAsyncThunk()
 - https://redux-toolkit.js.org/api/createAsyncThunk#payloadcreator:
+- https://redux-toolkit.js.org/api/createAsyncThunk#return-value
 
-  - A "payload creator" callback function that returns a Promise containing some data,or a rejected Promise with an error
-  - https://redux-toolkit.js.org/api/createAsyncThunk#return-value
-  - thunkAPI argument gives acccess to requestId, rejectWithValue(value, [meta]), etc ...
-  - returns pending, fulfilled, rejected
-  - if the promise resolved successfully, dispatch the fulfilled action with the promise value as action.payload
+## TODO
 
-- TODO:
 - Persist data:
 - https://frontend-digest.com/setting-up-a-full-stack-react-application-835c2a37eb7a
 - https://github.com/typicode/json-server
+- Outlet Context:
 - Pass Navigation as prop to Outlet https://stackoverflow.com/questions/70027979/passing-props-to-outlet-when-nestining-routes-in-react-router-v6
-- use toast for error popups: react-hot-toast
-- Refactor style with MUI https://mui.com/material-ui/getting-started/installation/
+- Try toast for error popups: react-hot-toast
+- Refactor style with MUI: https://mui.com/material-ui/getting-started/installation/

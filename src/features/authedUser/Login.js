@@ -6,9 +6,6 @@ import { loginUser, clearState } from "./authedUserSlice";
 import { handleGetUsers } from "../user/userSlice";
 import { getLoginProfiles } from "../../helpers/sortData";
 
-import { Circles } from "react-loader-spinner";
-
-// TODO header for Login page with no navigation
 const Login = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -62,7 +59,6 @@ const Login = () => {
     if (isSuccess) {
       navigate("/");
     }
-    // TODO test error
     if (isError) {
       console.log(errorMessage);
       dispatch(clearState());
@@ -71,22 +67,6 @@ const Login = () => {
 
   return (
     <Fragment>
-      {/* TODO remove ... */}
-      {/* {(isFetching || isFetchingUsers) && ( */}
-      {/* {isFetchingUsers && (
-        <div className="login-container">
-          <Circles
-            height="80"
-            width="80"
-            color="#4fa94d"
-            ariaLabel="circles-loading"
-            wrapperStyle={{}}
-            wrapperClass=""
-            visible={true}
-          />
-        </div>
-      )} */}
-
       {isGetUsersSuccess && availableAppUsers ? (
         <div className="login-container">
           <div className="login-heading">
