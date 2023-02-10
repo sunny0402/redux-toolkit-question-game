@@ -2,10 +2,6 @@ import React from "react";
 import { Navigate, Route, Outlet, useLocation } from "react-router-dom";
 import { useSelector } from "react-redux";
 import Navigation from "./Navigation";
-// import Dashboard from "./Dashboard";
-// import LeaderBoard from "./features/user/Leaderboard";
-// import NewQuestion from "./features/question/NewQuestion";
-// import QuestionDetails from "./features/question/QuestionDetails";
 
 const AuthorizedRoute = () => {
   const location = useLocation();

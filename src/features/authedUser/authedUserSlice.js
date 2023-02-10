@@ -20,7 +20,6 @@ export const loginUser = createAsyncThunk(
         localStorage.setItem("token", authUserId);
 
         // Note use returned values to update authUser slice
-        console.log({ authUserId, authUserName, authUserAvatar });
         return { authUserId, authUserName, authUserAvatar };
       }
     } catch (e) {

@@ -16,7 +16,7 @@ const Leaderboard = () => {
   // and leaderBoardArr: id,answerCount, askCount, score
 
   const renderLeaderBoard = leaderBoardArr.map((leaderInfo) => (
-    <article className="question-article-container" key={leaderInfo.id}>
+    <article className="question-article-container fadeIn" key={leaderInfo.id}>
       <h3>Name:&nbsp;&nbsp;{userData[leaderInfo.id].name}</h3>
       <div className="avatar-container">
         <img src={userData[leaderInfo.id].avatarURL} alt="user avatar" />

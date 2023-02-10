@@ -44,14 +44,17 @@ const Login = () => {
     dispatch(loginUser(selectedUser));
   };
 
-  // Note: on mount check if token exists to simulate persist state ...
-  // isSuccess will be set to true if
+  // Note: When component mounts check if token exists in local storage
+  // This siumlates a cookie, persistent login.
+  // isSuccess will be set to true if login successful and user redirected to "/"
   useEffect(() => {
-    let tokenUserId = localStorage.getItem("token");
+    dispatch(clearState());
+    const tokenUserId = localStorage.getItem("token");
     if (tokenUserId) {
       dispatch(loginUser(tokenUserId));
     }
-    dispatch(clearState());
+    // Test
+    // dispatch(clearState());
   }, []);
 
   // Note: isSuccess, isError from authedUserSlice
@@ -68,7 +71,9 @@ const Login = () => {
 
   return (
     <Fragment>
-      {(isFetching || isFetchingUsers) && (
+      {/* TODO remove ... */}
+      {/* {(isFetching || isFetchingUsers) && ( */}
+      {/* {isFetchingUsers && (
         <div className="login-container">
           <Circles
             height="80"
@@ -80,9 +85,9 @@ const Login = () => {
             visible={true}
           />
         </div>
-      )}
+      )} */}
 
-      {isGetUsersSuccess && availableAppUsers && (
+      {isGetUsersSuccess && availableAppUsers ? (
         <div className="login-container">
           <div className="login-heading">
             <h2>Login</h2>
@@ -106,7 +111,6 @@ const Login = () => {
                 />
                 <br />
                 <p>{availableAppUsers[selectedUser].name}</p>
-
                 <button
                   type="button"
                   onClick={handleLogin}
@@ -118,6 +122,8 @@ const Login = () => {
             )}
           </form>
         </div>
+      ) : (
+        <div className="login-container"></div>
       )}
     </Fragment>
   );

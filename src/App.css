@@ -11,6 +11,12 @@ html {
   font-weight: bold;
 }
 
+body {
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+/* Note: wraps navigation, all routes and footer */
 .app-container {
   display: flex;
   flex-direction: column;
@@ -21,32 +27,119 @@ html {
 
 .navigation {
   display: flex;
-  justify-content: space-around;
+  flex-direction: row;
+  justify-content: center;
   align-items: center;
-  min-height: 10vh;
+
+  width: 100%;
+  min-height: 20vh;
+
   background-color: var(--lighter-background);
   /* border: 4px solid red; */
+  position: relative;
 }
 
-.question-container {
-  width: 95%;
+/* Note: links for dashboard,new question, leaderboard */
+.navigation-links-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  align-items: center;
+
+  width: 65%;
+  height: 100%;
+
+  position: absolute;
+  /* top: 10px; */
+  left: 10px;
+}
+
+.navigation-links-container h2 {
+  font-size: 24px;
+}
+
+/* Note: p, avatar  image and logout button */
+.authed-header-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: center;
+
+  height: 100%;
+  width: 35%;
+
+  position: absolute;
+  /* top: 10px; */
+  right: 10px;
+}
+
+/* Note: image inside avatar container div */
+.authed-header-container img {
+  width: 50px;
+  height: 50px;
+  /* TODO make avatar square in header */
+  /* border-radius: 50%; */
+  object-fit: cover;
+}
+
+.authed-header-container p {
+  font-size: 16px;
+}
+
+.authed-header-container button {
+  background-color: var(--button-color);
+  color: var(--primary-text-color);
+  font-size: 14px;
+  padding: 6px 16px;
+  border-radius: 10px;
+  border: none;
+}
+
+.home-page-container {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+.home-page-loading {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+}
+
+.home-page-container h2 {
+  margin: 0 auto;
+}
+
+.dashboard-button-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+}
+
+.question-grid-container {
+  width: 100%;
   max-width: 1400px;
   margin: 1em auto;
   display: grid;
   /* Number of columns determined by auto-fit.
-  minimum size of each column is 14em and the maximum size is 1fr */
-  grid-template-columns: repeat(auto-fit, minmax(15em, 1fr));
-  grid-gap: 1.5em;
+  minimum size of each column is 16em and the maximum size is 1fr */
+  grid-template-columns: repeat(auto-fit, minmax(22em, 1fr));
+  /* grid-gap: 1.5em; */
   grid-auto-flow: row;
 }
 
 @media (min-width: 52em) {
   .grid-container {
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(3, 1fr);
   }
 }
 
-.grid-item {
+.question-grid-item {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
@@ -57,6 +150,18 @@ html {
   border-radius: 8px;
   padding: 10px;
   margin: 10px;
+}
+
+.highlight-optionOne-container,
+.highlight-optionTwo-container {
+  width: 100%;
+  background-color: var(--primary-background);
+  border-radius: 8px;
+}
+
+.highlight-optionOne-container p.question-option-text,
+.highlight-optionTwo-container p.question-option-text {
+  text-decoration: underline;
 }
 
 form {
@@ -77,40 +182,6 @@ form {
 
 .login-form {
   width: 80%;
-}
-
-.duration-container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: top;
-}
-
-.single-question-container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  width: 100vw;
-}
-
-.single-question-div {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background-color: var(--lighter-background);
-  width: 75%;
-  box-shadow: 1px 1px 10px 4px var(--shadow-color);
-  border-radius: 8px;
-  padding: 20px;
-}
-
-.highlight-optionOne-container {
-  border: 2px solid red;
-}
-
-.highlight-optionTwo-container {
-  border: 2px solid red;
 }
 
 label {
@@ -150,7 +221,22 @@ textarea {
 
 a {
   color: var(--link-color);
+  text-decoration: none;
+}
+
+a.link-btn {
+  color: var(--link-color);
   margin: 10px;
+  text-decoration: none;
+}
+
+h2.home-link {
+  color: var(--primary-text-color);
+  text-decoration: none;
+}
+
+a:active {
+  text-decoration: none;
 }
 
 img {
@@ -201,12 +287,44 @@ button {
 
 /* Footer */
 .app-footer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
   margin-top: 1em;
   padding: 1em;
-  height: 5vh;
+  height: 10vh;
   width: 100%;
-  display: flex;
-  justify-content: space-around;
-  align-items: center;
+
   background-color: var(--lighter-background);
+}
+
+.app-footer a {
+  color: var(--primary-text-color);
+}
+
+/* Fade in animation for Leaderboard */
+.fadeIn {
+  animation: fadeInAnimation 3.5s ease-in;
+}
+
+@keyframes fadeInAnimation {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+.fadeIn:nth-child(1) {
+  animation-duration: 3s;
+}
+
+.fadeIn:nth-child(2) {
+  animation-duration: 2s;
+}
+
+.fadeIn:nth-child(3) {
+  animation-duration: 1s;
 }

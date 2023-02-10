@@ -5,8 +5,6 @@ import { useNavigate, Link } from "react-router-dom";
 const Navigation = () => {
   const currentAuthedUser = useSelector((state) => state.authUser);
   //   TODO authToken should be const
-  //   if (currentAuthedUser.authedId === authToken) {
-  //   const authToken = localStorage.getItem("token");
   const navigate = useNavigate();
 
   const onLogOut = () => {
@@ -16,26 +14,25 @@ const Navigation = () => {
 
   return (
     <div className="navigation">
-      <Link to="/" className="link-btn">
-        Dashboard
-      </Link>
-      <h2>Would You Rather?</h2>
-      <Link to="/add" className="link-btn">
-        New Question
-      </Link>
-      <Link to="/leaderboard" className="link-btn">
-        Leaderboard
-      </Link>
-
-      <div className="dasboard-auth-heading">
-        Welcome:&nbsp;&nbsp; <h3>{currentAuthedUser.authedName}</h3>
-        <div className="avatar-container">
-          <img src={currentAuthedUser.authedAvatar} alt="user avatar" />
-        </div>
+      <div className="navigation-links-container">
+        <Link to="/">
+          <h2 className="home-link">Would You Rather?</h2>
+        </Link>
+        <Link to="/add" className="link-btn">
+          New Question
+        </Link>
+        <Link to="/leaderboard" className="link-btn">
+          Leaderboard
+        </Link>
       </div>
-      <button onClick={onLogOut} type="button">
-        Log Out
-      </button>
+
+      <div className="authed-header-container">
+        <p>{currentAuthedUser.authedName}</p>
+        <img src={currentAuthedUser.authedAvatar} alt="user avatar" />
+        <button onClick={onLogOut} type="button">
+          Log Out
+        </button>
+      </div>
     </div>
   );
 };

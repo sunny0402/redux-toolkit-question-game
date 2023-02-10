@@ -1,6 +1,7 @@
 # About
 
 A question game "Would You Rather?" built with Redux Toolkit.
+Mock api and backend.
 
 ## Notes / Resources / TODO
 
@@ -23,3 +24,4 @@ A question game "Would You Rather?" built with Redux Toolkit.
 - https://github.com/typicode/json-server
 - Pass Navigation as prop to Outlet https://stackoverflow.com/questions/70027979/passing-props-to-outlet-when-nestining-routes-in-react-router-v6
 - use toast for error popups: react-hot-toast
+- Refactor style with MUI https://mui.com/material-ui/getting-started/installation/

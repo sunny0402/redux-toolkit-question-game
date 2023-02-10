@@ -25,7 +25,13 @@ function App() {
   return (
     <BrowserRouter>
       <div className="app-container">
-        {authed && <Navigation />}
+        {authed ? (
+          <Navigation />
+        ) : (
+          <div className="navigation">
+            <h2>Would You Rather?</h2>
+          </div>
+        )}
         <Routes>
           <Route path="/login" element={<Login />} />
           <Route element={<AuthorizedRoute />}>

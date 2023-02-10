@@ -3,8 +3,8 @@ import { useSelector, useDispatch } from "react-redux";
 import { Circles } from "react-loader-spinner";
 import { useNavigate, Link } from "react-router-dom";
 
-//Note: thunks for fetching question and user data
-import { handleGetUsers } from "./features/user/userSlice";
+//Note: thunks for fetching question and user data.
+// handleGetUsers dispatched in <Login />
 import { handleGetQuestions } from "./features/question/questionSlice";
 
 // Note: helpers to sort and format quetsions
@@ -21,10 +21,9 @@ const Dashboard = () => {
   // Note: authedUser info set as part of login
   const currentAuthedUser = useSelector((state) => state.authUser);
 
-  // Note: from userSlice get user infp and status of thunk to get users
-  const { userData, isFetchingUsers, isGetUsersSuccess } = useSelector(
-    (state) => state.users
-  );
+  // Note: From userSlice get user info.
+  // HandleGetUsers thunk dispatched in <Login /> to get data from _DATA.js and save to Redux
+  const { userData } = useSelector((state) => state.users);
 
   const {
     questionData,
@@ -44,18 +43,18 @@ const Dashboard = () => {
   const [notAnswered, setNotAnswered] = useState([]);
 
   // Note: populate Redux store with user and question data
-  // TODO: userData should already be poulated in <Login />
+  // userData should already be poulated in <Login />
   useEffect(() => {
     try {
-      dispatch(handleGetUsers());
+      // dispatch(handleGetUsers());
       dispatch(handleGetQuestions());
     } catch (error) {
       setIsError(true);
     }
   }, []);
 
-  // Note: sort and format questions for render
-  // Update component state: setAnswered(formattedAnswered) & setNotAnswered(formattedNotAnswered);
+  // Note: sort and format questions for render and update component state
+  // setAnswered(formattedAnswered) & setNotAnswered(formattedNotAnswered)
   useEffect(() => {
     try {
       if (questionData && currentAuthedUser && userData) {
@@ -99,13 +98,11 @@ const Dashboard = () => {
   }, [isError]);
 
   const renderAnswered = answered.map((question) => (
-    <article className="question-article-container" key={question.id}>
+    <article className="question-grid-item" key={question.id}>
       <div className="avatar-container">
         <img src={userData[question.author].avatarURL} alt="user avatar" />
       </div>
-      <h3>
-        {userData[question.author].name}&nbsp;&nbsp; asks would you rather?
-      </h3>
+      <h4>{userData[question.author].name}&nbsp; asks would you rather?</h4>
       <div
         className={
           question.optionOne.votes.includes(currentAuthedUser.authedId)
@@ -113,11 +110,16 @@ const Dashboard = () => {
             : "option-container"
         }
       >
-        <p className="question-option">
-          Option One:&nbsp;&nbsp;{question.optionOne.text}
+        <p className="question-option-text">
+          {question.optionOne.votes.includes(currentAuthedUser.authedId) ? (
+            <span>&#10004;&nbsp;&nbsp;&nbsp;</span>
+          ) : (
+            ""
+          )}
+          Option One:&nbsp;{question.optionOne.text}
         </p>
-        <p className="question-option">
-          Option One Votes:{question.optionOne.votes.join(", ")}
+        <p className="question-option-votes">
+          Option One Votes:&nbsp;{question.optionOne.votes.join(", ")}
         </p>
       </div>
 
@@ -128,14 +130,20 @@ const Dashboard = () => {
             : "option-container"
         }
       >
-        <p className="question-option">
-          Option Two:&nbsp;&nbsp;{question.optionTwo.text}
+        <p className="question-option-text">
+          {question.optionTwo.votes.includes(currentAuthedUser.authedId) ? (
+            <span>&#10004;&nbsp;</span>
+          ) : (
+            ""
+          )}
+          Option Two:&nbsp;{question.optionTwo.text}
         </p>
-        <p className="question-option">
-          Option Two Votes:&nbsp;&nbsp;{question.optionTwo.votes.join(", ")}
+        <p className="question-option-votes">
+          Option Two Votes:&nbsp;{question.optionTwo.votes.join(", ")}
         </p>
       </div>
-      <p>Date asked:&nbsp;&nbsp;{question.formattedTimestamp}</p>
+
+      <p>Date asked:&nbsp;{question.formattedTimestamp}</p>
       <Link to={`/questions/${question.id}`} className="link-btn">
         <button>View Question Details</button>
       </Link>
@@ -143,87 +151,76 @@ const Dashboard = () => {
   ));
 
   const renderNotAnswered = notAnswered.map((question) => (
-    <article className="question-article-container" key={question.id}>
+    <article className="question-grid-item" key={question.id}>
       <div className="avatar-container">
         <img src={userData[question.author].avatarURL} alt="user avatar" />
       </div>
-      <h3>
-        {userData[question.author].name}&nbsp;&nbsp; asks would you rather?
-      </h3>
-      <p className="question-option">
+      <h4>{userData[question.author].name}&nbsp; asks would you rather?</h4>
+      <p className="question-option-text">
         Option One:&nbsp;&nbsp;{question.optionOne.text}
       </p>
-      <p className="question-option">
+      <p className="question-option-text">
         Option Two:&nbsp;&nbsp;{question.optionTwo.text}
       </p>
       <p>Date asked:&nbsp;&nbsp;{question.formattedTimestamp}</p>
-      <Link
-        to={`/questions/${question.id}`}
-        // state={{ answered: false }}
-        className="link-btn"
-      >
+      <Link to={`/questions/${question.id}`} className="link-btn">
         <button>Answer Question</button>
       </Link>
     </article>
   ));
 
   return (
-    <div className="dasboard-container">
-      {isFetchingUsers || isFetchingQuestions ? (
-        <Circles
-          height="80"
-          width="80"
-          color="#4fa94d"
-          ariaLabel="circles-loading"
-          wrapperStyle={{}}
-          wrapperClass=""
-          visible={true}
-        />
-      ) : currentAuthedUser && renderAnswered && renderNotAnswered ? (
-        <Fragment>
-          <button
-            onClick={() => {
-              setShowAnswered(true);
-              setShowNotAnswered(false);
-            }}
-          >
-            Answered
-          </button>
-          <button
-            onClick={() => {
-              setShowAnswered(false);
-              setShowNotAnswered(true);
-            }}
-          >
-            Not Answered
-          </button>
-          <section className="question-container">
+    <Fragment>
+      {isFetchingQuestions ? (
+        <div className="home-page-container">
+          <div className="home-page-loading">
+            <Circles
+              height="80"
+              width="80"
+              color="#4fa94d"
+              ariaLabel="circles-loading"
+              wrapperStyle={{}}
+              wrapperClass=""
+              visible={true}
+            />
+          </div>
+        </div>
+      ) : (
+        currentAuthedUser &&
+        renderAnswered &&
+        renderNotAnswered && (
+          <div className="home-page-container">
+            {showAnswered && <h2>Already Answered:</h2>}
+            {showNotAnswered && <h2>Not Answered Yet:</h2>}
+            <div className="dashboard-button-container">
+              <button
+                onClick={() => {
+                  setShowAnswered(true);
+                  setShowNotAnswered(false);
+                }}
+              >
+                Answered
+              </button>
+              <button
+                onClick={() => {
+                  setShowAnswered(false);
+                  setShowNotAnswered(true);
+                }}
+              >
+                Not Answered
+              </button>
+            </div>
+
             {showAnswered && (
-              <Fragment>
-                <h2>Already Answered:</h2>
-                {renderAnswered}
-              </Fragment>
+              <div className="question-grid-container">{renderAnswered}</div>
             )}
             {showNotAnswered && (
-              <Fragment>
-                <h2>Not Answered:</h2>
-                {renderNotAnswered}
-              </Fragment>
+              <div className="question-grid-container">{renderNotAnswered}</div>
             )}
-          </section>
-        </Fragment>
-      ) : (
-        <Circles
-          height="80"
-          width="80"
-          color="#4fa94d"
-          ariaLabel="circles-loading"
-          wrapperStyle={{}}
-          wrapperClass=""
-          visible={true}
-        />
+          </div>
+        )
       )}
-    </div>
+    </Fragment>
   );
 };
 
