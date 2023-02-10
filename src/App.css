@@ -43,6 +43,7 @@ body {
 .navigation-links-container {
   display: flex;
   flex-direction: row;
+  /* Note:equal space between items and at start/end of container */
   justify-content: space-around;
   align-items: center;
 
@@ -58,7 +59,11 @@ body {
   font-size: 24px;
 }
 
-/* Note: p, avatar  image and logout button */
+.navigation-links-container a {
+  font-size: 18px;
+}
+
+/* Note: name (p), avatar (image) and logout (button)  */
 .authed-header-container {
   display: flex;
   flex-direction: column;
@@ -107,10 +112,6 @@ body {
   justify-content: center;
   align-items: center;
   width: 100%;
-}
-
-.home-page-container h2 {
-  margin: 0 auto;
 }
 
 .dashboard-button-container {
@@ -162,6 +163,22 @@ body {
 .highlight-optionOne-container p.question-option-text,
 .highlight-optionTwo-container p.question-option-text {
   text-decoration: underline;
+}
+
+.question-details-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100vw;
+}
+
+.question-details-card {
+  background-color: var(--lighter-background);
+  max-width: 75%;
+  box-shadow: 1px 1px 10px 4px var(--shadow-color);
+  border-radius: 8px;
+  padding: 20px;
 }
 
 form {
@@ -303,7 +320,25 @@ button {
   color: var(--primary-text-color);
 }
 
-/* Fade in animation for Leaderboard */
+/* <Leaderboard />*/
+.leaderboard-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+}
+
+.leaderboard-card {
+  background-color: var(--lighter-background);
+  /* min-width: 70%; */
+  box-shadow: 1px 1px 10px 4px var(--shadow-color);
+  border-radius: 8px;
+  padding: 20px;
+  margin: 20px;
+}
+
+/* Fade in animation for <Leaderboard/> */
 .fadeIn {
   animation: fadeInAnimation 3.5s ease-in;
 }
@@ -327,4 +362,49 @@ button {
 
 .fadeIn:nth-child(3) {
   animation-duration: 1s;
+}
+
+/* Adjust for smaller screen size */
+@media (max-width: 770px) {
+  .navigation-links-container h2 {
+    font-size: 22px;
+  }
+  .navigation-links-container a {
+    font-size: 17px;
+  }
+
+  .authed-header-container p {
+    font-size: 14px;
+  }
+
+  .authed-header-container button {
+    font-size: 12x;
+    padding: 4px 14px;
+    border-radius: 8px;
+    border: none;
+  }
+
+  .navigation-links-container {
+    display: flex;
+    flex-direction: column;
+    /* Note:equal space between items and at start/end of container */
+    justify-content: space-around;
+    align-items: flex-start;
+    margin-left: 10px;
+  }
+
+  .authed-header-container {
+    align-items: flex-end;
+    margin-right: 10px;
+  }
+
+  .leaderboard-container {
+    flex-direction: column;
+  }
+
+  .leaderboard-card {
+    min-width: 70%;
+    padding: 12px;
+    margin: 10px;
+  }
 }

@@ -10,13 +10,12 @@ const Leaderboard = () => {
 
   // Note: returns [{id,answerCount, askCount, score}, ...]
   const leaderBoardArr = userScores(userData);
-  console.log("leaderBoardArr: ", leaderBoardArr);
 
   // Note: userData: id, name, avatarURL
   // and leaderBoardArr: id,answerCount, askCount, score
 
   const renderLeaderBoard = leaderBoardArr.map((leaderInfo) => (
-    <article className="question-article-container fadeIn" key={leaderInfo.id}>
+    <article className="leaderboard-card fadeIn" key={leaderInfo.id}>
       <h3>Name:&nbsp;&nbsp;{userData[leaderInfo.id].name}</h3>
       <div className="avatar-container">
         <img src={userData[leaderInfo.id].avatarURL} alt="user avatar" />
@@ -30,21 +29,9 @@ const Leaderboard = () => {
   ));
 
   return (
-    <div className="dasboard-container">
-      {renderLeaderBoard ? (
-        <section className="question-container">{renderLeaderBoard}</section>
-      ) : (
-        <Circles
-          height="80"
-          width="80"
-          color="#4fa94d"
-          ariaLabel="circles-loading"
-          wrapperStyle={{}}
-          wrapperClass=""
-          visible={true}
-        />
-      )}
-    </div>
+    <section className="leaderboard-container">
+      {renderLeaderBoard && <Fragment>{renderLeaderBoard}</Fragment>}
+    </section>
   );
 };
 

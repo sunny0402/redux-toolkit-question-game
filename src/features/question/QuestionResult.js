@@ -35,11 +35,10 @@ const QuestioResult = (props) => {
   const theTimestamp = formatTime(theQuestion.timestamp);
 
   return (
-    <section className="single-question-container">
+    <section className="question-details-container">
       {theQuestion && (
-        <article className="question-article-container" key={theQuestion.id}>
+        <article className="question-details-card" key={theQuestion.id}>
           <h3>Question Author:&nbsp;&nbsp;{theQuestion.author}</h3>
-          <h4>Question Id:&nbsp;&nbsp;{theQuestion.id}</h4>
           <h4>Date Asked:&nbsp;&nbsp;{theTimestamp}</h4>
 
           <div
@@ -49,7 +48,14 @@ const QuestioResult = (props) => {
                 : "option-container"
             }
           >
-            <p className="question-option">
+            <p className="question-option-text">
+              {theQuestion.optionOne.votes.includes(
+                currentAuthedUser.authedId
+              ) ? (
+                <span>&#10004;&nbsp;&nbsp;&nbsp;</span>
+              ) : (
+                ""
+              )}
               Option One:&nbsp;&nbsp;{theQuestion.optionOne.text}
             </p>
             <PercentageBar percentage={option1Percentage} />
@@ -63,7 +69,14 @@ const QuestioResult = (props) => {
                 : "option-container"
             }
           >
-            <p className="question-option">
+            <p className="question-option-text">
+              {theQuestion.optionTwo.votes.includes(
+                currentAuthedUser.authedId
+              ) ? (
+                <span>&#10004;&nbsp;&nbsp;&nbsp;</span>
+              ) : (
+                ""
+              )}
               Option Two:&nbsp;&nbsp;{theQuestion.optionTwo.text}
             </p>
             <PercentageBar percentage={option2Percentage} />
