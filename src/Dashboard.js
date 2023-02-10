@@ -190,8 +190,10 @@ const Dashboard = () => {
         renderAnswered &&
         renderNotAnswered && (
           <div className="home-page-container">
-            {showAnswered && <h2>Already Answered:</h2>}
-            {showNotAnswered && <h2>Not Answered Yet:</h2>}
+            <div className="dashboard-heading">
+              {showAnswered && <h2>Already Answered</h2>}
+              {showNotAnswered && <h2>Not Answered Yet</h2>}
+            </div>
             <div className="dashboard-button-container">
               <button
                 onClick={() => {

@@ -112,6 +112,10 @@ body {
   width: 100%;
 }
 
+.dashboard-heading {
+  margin: 0 auto;
+}
+
 .dashboard-button-container {
   display: flex;
   flex-direction: row;
