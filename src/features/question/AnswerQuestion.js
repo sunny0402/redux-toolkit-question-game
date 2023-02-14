@@ -20,7 +20,6 @@ const AnswerQuestion = (props) => {
   const [submitted, setSubmitted] = useState(false);
 
   const dispatch = useDispatch();
-  const navigate = useNavigate();
 
   const handleOptionChange = (event) => {
     setSelectedOption(event.target.value);

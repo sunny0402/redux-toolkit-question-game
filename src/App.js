@@ -22,6 +22,7 @@ function App() {
   if (currentAuthedUser.authedId === authToken) {
     authed = true;
   }
+
   return (
     <BrowserRouter>
       <div className="app-container">
@@ -42,6 +43,7 @@ function App() {
               element={<QuestionDetails />}
             />
             <Route path="/leaderboard" element={<LeaderBoard />} />
+            <Route path="*" element={<NotFound />} />
           </Route>
           <Route path="*" element={<NotFound />} />
         </Routes>
@@ -49,6 +51,7 @@ function App() {
         <div className="app-footer">
           <footer>
             <a
+              className="github-link"
               href="https://github.com/sunny0402"
               target="_blank"
               rel="noopener noreferrer"

@@ -1,6 +1,6 @@
 import React, { Fragment, useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 
 import { loginUser, clearState } from "./authedUserSlice";
 import { handleGetUsers } from "../user/userSlice";
@@ -9,8 +9,9 @@ import { getLoginProfiles } from "../../helpers/sortData";
 const Login = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const location = useLocation();
 
-  // const availableAppUsers = ["sarahedo", "tylermcginnis", "johndoe"];
+  // Note: instead of hardcoding  availableAppUsers = ["sarahedo", "tylermcginnis", "johndoe"];
   const { userData, isFetchingUsers, isGetUsersSuccess } = useSelector(
     (state) => state.users
   );
@@ -24,7 +25,7 @@ const Login = () => {
   );
 
   // Note: populate Redux store with user data
-  // that way can get available users and avatars, will only get question data in dashboard
+  // that way can get available users and avatars, will get question data in dashboard
   useEffect(() => {
     try {
       dispatch(handleGetUsers());
@@ -35,29 +36,35 @@ const Login = () => {
 
   const availableAppUsers = getLoginProfiles(userData);
 
-  // Note: loginUser will verify that selected user in api.getUsers()
-  // if loginUser.fulfilled, isSuccess wil be set to true
+  // Note: loginUser will verify that selected user in api.getUsers() response
+  // if loginUser.fulfilled, isSuccess wil be set to true in authUserSlice
   const handleLogin = () => {
     dispatch(loginUser(selectedUser));
   };
 
   // Note: When component mounts check if token exists in local storage
-  // This siumlates a cookie, persistent login.
+  // This siumlates persistent login as with a cookie
   // isSuccess will be set to true if login successful and user redirected to "/"
   useEffect(() => {
+    // Note: clear authUser state
     dispatch(clearState());
     const tokenUserId = localStorage.getItem("token");
     if (tokenUserId) {
       dispatch(loginUser(tokenUserId));
     }
-    // Test
-    // dispatch(clearState());
   }, []);
 
   // Note: isSuccess, isError from authedUserSlice
   useEffect(() => {
     if (isSuccess) {
-      navigate("/");
+      // Note: desiredPath exists if user redirected to /login after manually entering a URL
+      const desiredPath = location.state?.path;
+
+      if (desiredPath) {
+        navigate(`${desiredPath}`, { state: { path: desiredPath } });
+      } else {
+        navigate("/");
+      }
     }
     if (isError) {
       console.log(errorMessage);
@@ -74,7 +81,11 @@ const Login = () => {
           </div>
           <form className="login-form">
             <label htmlFor="username-label">Select User</label>
-            <select value={selectedUser} onChange={onUserChanged}>
+            <select
+              className="user-select"
+              value={selectedUser}
+              onChange={onUserChanged}
+            >
               <option value="">Select a user</option>
               {Object.entries(availableAppUsers).map(([username, user]) => (
                 <option key={username} value={username}>
@@ -103,7 +114,11 @@ const Login = () => {
           </form>
         </div>
       ) : (
-        <div className="login-container"></div>
+        <div className="login-container">
+          <div className="login-heading">
+            <h2>Authenticating...</h2>
+          </div>
+        </div>
       )}
     </Fragment>
   );

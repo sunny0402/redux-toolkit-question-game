@@ -1,18 +1,31 @@
 import React from "react";
-import { Navigate, Route, Outlet, useLocation } from "react-router-dom";
+import { Navigate, Outlet, useLocation } from "react-router-dom";
 import { useSelector } from "react-redux";
-import Navigation from "./Navigation";
 
 const AuthorizedRoute = () => {
   const location = useLocation();
-  let currentAuthedUser = useSelector((state) => state.authUser);
-  let authToken = localStorage.getItem("token");
+
+  const currentAuthedUser = useSelector((state) => state.authUser);
+  const authToken = localStorage.getItem("token");
 
   if (currentAuthedUser.authedId === authToken) {
-    // Note: React Router v6: <Route path="/dashboard" element={<Dashboard authed={true} />} />
+    // Note: authed prop for authorized navigation header with links to protected routes
+    // <Outlet /> renders authorized children routes
     return <Outlet authed={true} />;
   } else {
-    return <Navigate to="/login" state={{ from: location }} replace />;
+    //Note: location.pathname contains the path the user was trying to access, but not authenticated
+    return (
+      <Navigate
+        to="/login"
+        replace={true}
+        state={{ path: location.pathname }}
+      />
+    );
+    // Note: with useNavigate hook
+    // navigate("/login", {
+    //   replace: true,
+    //   state: { path: location.pathname },
+    // });
   }
 };
 

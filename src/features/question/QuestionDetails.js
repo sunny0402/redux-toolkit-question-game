@@ -1,17 +1,27 @@
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import { useParams, Navigate } from "react-router-dom";
+import {
+  useParams,
+  useNavigate,
+  useLocation,
+  Navigate,
+} from "react-router-dom";
 import QuestioResult from "./QuestionResult";
 import AnswerQuestion from "./AnswerQuestion";
+import NotFound from "../../NotFound";
 
 const QuestionDetails = () => {
   const params = useParams();
   const { questionId } = params;
 
+  const location = useLocation();
+  const navigate = useNavigate();
+
   const [isError, setIsError] = useState(false);
   const [isAnswered, setIsAnswered] = useState(false);
+  const [isValidQuestion, setIsValidQuestion] = useState(false);
 
-  // Note: object where key: id & value: id,author, timestamp, optionOne,optionTwo
+  // Note: questionData: key: id & value: id,author, timestamp, optionOne,optionTwo
   const { questionData } = useSelector((state) => state.questions);
 
   // Note: authedUser:  authedId, authedAvatar, authedName
@@ -19,30 +29,39 @@ const QuestionDetails = () => {
 
   const { userData } = useSelector((state) => state.users);
 
-  // Note: if question exists, determined whether it is answered or not
+  // Note: determine if question exists and whether it is answered or not
   useEffect(() => {
     if (questionId in questionData) {
       const answeredQuestions = userData[authedUser.authedId].answers;
+      setIsValidQuestion(true);
       if (questionId in answeredQuestions) {
         setIsAnswered(true);
       } else {
         setIsAnswered(false);
       }
     } else {
+      // Note: question does not exist, invalid path
       setIsError(true);
     }
   }, []);
 
+  // Note: Error means invalid  question, log user out.
   useEffect(() => {
     if (isError) {
-      <Navigate to="/404" replace />;
+      localStorage.removeItem("token");
+
+      // Note; if location.state.path exists user was redirect here after re-authenticating
+      // But path to question is invalid
+      if (location.state?.path) {
+        navigate("/404", {});
+      }
     }
   }, [isError]);
 
-  return isAnswered ? (
+  return isValidQuestion && isAnswered ? (
     <QuestioResult questionId={questionId} />
   ) : (
-    <AnswerQuestion questionId={questionId} />
+    isValidQuestion && <AnswerQuestion questionId={questionId} />
   );
 };
 
