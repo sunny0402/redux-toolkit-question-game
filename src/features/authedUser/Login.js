@@ -20,13 +20,21 @@ const Login = () => {
   const onUserChanged = (e) => setSelectedUser(e.target.value);
 
   // Note: from authedUserSlice get status of thunk which verifies and sets authed user info
-  const { isFetching, isSuccess, isError, errorMessage } = useSelector(
+  const { authedId, isSuccess, isError, errorMessage } = useSelector(
     (state) => state.authUser
   );
 
-  // Note: populate Redux store with user data
-  // that way can get available users and avatars, will get question data in dashboard
+  // Note: When component mounts check if token exists in local storage
   useEffect(() => {
+    dispatch(clearState());
+    const tokenUserId = localStorage.getItem("token");
+    if (tokenUserId) {
+      // Note: disable persistent login
+      localStorage.removeItem("token");
+      // Note: This siumlates persistent login as with a cookie
+      // isSuccess will be set to true if login successful and user redirected to "/"
+      // dispatch(loginUser(tokenUserId));
+    }
     try {
       dispatch(handleGetUsers());
     } catch (error) {
@@ -36,34 +44,24 @@ const Login = () => {
 
   const availableAppUsers = getLoginProfiles(userData);
 
-  // Note: loginUser will verify that selected user in api.getUsers() response
-  // if loginUser.fulfilled, isSuccess wil be set to true in authUserSlice
-  const handleLogin = () => {
-    dispatch(loginUser(selectedUser));
-  };
-
-  // Note: When component mounts check if token exists in local storage
-  // This siumlates persistent login as with a cookie
-  // isSuccess will be set to true if login successful and user redirected to "/"
-  useEffect(() => {
-    // Note: clear authUser state
-    dispatch(clearState());
-    const tokenUserId = localStorage.getItem("token");
-    if (tokenUserId) {
-      dispatch(loginUser(tokenUserId));
-    }
-  }, []);
-
-  // Note: isSuccess, isError from authedUserSlice
+  // Note: After successful login navigate. isSuccess, isError from authedUserSlice.loginUser
   useEffect(() => {
     if (isSuccess) {
       // Note: desiredPath exists if user redirected to /login after manually entering a URL
       const desiredPath = location.state?.path;
+      const user = location.state?.user;
 
       if (desiredPath) {
-        navigate(`${desiredPath}`, { state: { path: desiredPath } });
+        if (desiredPath && user === authedId) {
+          delete location.state.user;
+          navigate(`${desiredPath}`, {
+            state: { path: desiredPath },
+          });
+        } else {
+          navigate("/", {});
+        }
       } else {
-        navigate("/");
+        navigate("/", {});
       }
     }
     if (isError) {
@@ -71,6 +69,12 @@ const Login = () => {
       dispatch(clearState());
     }
   }, [isSuccess, isError]);
+
+  // Note: loginUser will verify that selected user in api.getUsers() response
+  // if loginUser.fulfilled, isSuccess wil be set to true in authUserSlice
+  const handleLogin = () => {
+    dispatch(loginUser(selectedUser));
+  };
 
   return (
     <Fragment>

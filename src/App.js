@@ -45,7 +45,6 @@ function App() {
             <Route path="/leaderboard" element={<LeaderBoard />} />
             <Route path="*" element={<NotFound />} />
           </Route>
-          <Route path="*" element={<NotFound />} />
         </Routes>
 
         <div className="app-footer">

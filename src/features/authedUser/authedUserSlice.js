@@ -19,7 +19,7 @@ export const loginUser = createAsyncThunk(
         // Note: set the token as the authedUserId to persist login on page reload
         localStorage.setItem("token", authUserId);
 
-        // Note use returned values to update authUser slice
+        // Note: use returned values to update authUser slice
         return { authUserId, authUserName, authUserAvatar };
       }
     } catch (e) {

@@ -37,6 +37,7 @@ https://sunny-codes-would-you-rather.netlify.app/
 - Protected Routes and Authentication with React Router: https://ui.dev/react-router-protected-routes-authentication
 - navigate vs <Navigate />: https://ui.dev/react-router-programmatically-navigate
 - clear location.state: https://stackoverflow.com/questions/40099431/how-do-i-clear-location-state-in-react-router-on-page-reload
+- 404 Error with Netlify: https://stackoverflow.com/questions/50752350/page-not-found-when-trying-to-access-a-site-deployed-on-netlify
 
 ## TODO
 

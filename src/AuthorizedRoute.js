@@ -18,7 +18,7 @@ const AuthorizedRoute = () => {
       <Navigate
         to="/login"
         replace={true}
-        state={{ path: location.pathname }}
+        state={{ path: location.pathname, user: authToken }}
       />
     );
     // Note: with useNavigate hook

@@ -8,7 +8,6 @@ import {
 } from "react-router-dom";
 import QuestioResult from "./QuestionResult";
 import AnswerQuestion from "./AnswerQuestion";
-import NotFound from "../../NotFound";
 
 const QuestionDetails = () => {
   const params = useParams();
@@ -48,13 +47,7 @@ const QuestionDetails = () => {
   // Note: Error means invalid  question, log user out.
   useEffect(() => {
     if (isError) {
-      localStorage.removeItem("token");
-
-      // Note; if location.state.path exists user was redirect here after re-authenticating
-      // But path to question is invalid
-      if (location.state?.path) {
-        navigate("/404", {});
-      }
+      navigate("/404", { replace: true, state: {} });
     }
   }, [isError]);
 
